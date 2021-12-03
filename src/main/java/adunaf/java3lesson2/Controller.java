@@ -78,10 +78,11 @@ public class Controller implements Initializable {
             stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
                 @Override
                 public void handle(WindowEvent event) {
-                    System.out.println("bye");
+                    System.out.println("by");
                     if (socket != null && !socket.isClosed()) {
                         try {
                             out.writeUTF("/end");
+                            HistoryHandler.closeWriting();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -122,12 +123,15 @@ public class Controller implements Initializable {
                     }
 
                     setTitle("Chat : " + nickname);
+                    textArea.appendText(HistoryHandler.readLastMessages());
+
 
                     while (true) {
                         String str = in.readUTF();
                         if (str.startsWith("/")) {
                             if (str.equals("/end")) {
                                 setAuthenticated(false);
+                                HistoryHandler.closeWriting();
                                 break;
                             }
                             if (str.startsWith("/clientlist ")) {
@@ -139,14 +143,13 @@ public class Controller implements Initializable {
                                     }
                                 });
                             }
-                            if (str.startsWith("/newNick ")){
-                                String[] token = str.split(" ", 2);
-                                setTitle("Chat : " + token[1]);
+                            if (str.startsWith("/yournickis ")) {
+                                nickname = str.split(" ")[1];
                             }
-                        }
-                        else
-                        {
+
+                        } else {
                             textArea.appendText(str + "\n");
+                            HistoryHandler.appendText(str + "\n");
                         }
                     }
                 } catch (RuntimeException e) {
@@ -187,6 +190,7 @@ public class Controller implements Initializable {
 
         try {
             out.writeUTF("/auth " + loginField.getText() + " " + passwordField.getText());
+            HistoryHandler.setLogin(loginField.getText());
             loginField.clear();
             passwordField.clear();
         } catch (IOException e) {
