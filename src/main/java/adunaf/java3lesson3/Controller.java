@@ -1,6 +1,7 @@
-package adunaf.java3lesson2;
+package adunaf.java3lesson3;
 
 
+import adunaf.java3lesson2.RegController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

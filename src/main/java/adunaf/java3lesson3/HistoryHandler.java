@@ -1,4 +1,4 @@
-package adunaf.java3lesson2;
+package adunaf.java3lesson3;
 
 import java.io.*;
 import java.util.LinkedList;
